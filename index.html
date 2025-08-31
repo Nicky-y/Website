@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="da">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S.A. Opt I/S — AI & Automatisering</title>
+  <meta name="description"
+    content="S.A. Opt I/S hjælper små virksomheder med at implementere AI og automatisering i deres workflow." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#e6fbff',
+              100: '#c5f3ff',
+              200: '#8ae6ff',
+              300: '#4ed9ff',
+              400: '#1cd0ff',
+              500: '#00c2f5',
+              600: '#00a0cc',
+              700: '#007aa0',
+              800: '#055f7c',
+              900: '#0a4e64'
+            }
+          },
+          boxShadow: {
+            glow: '0 0 0 2px rgba(0,194,245,0.25), 0 0 24px rgba(0,194,245,0.35)'
+          },
+          backgroundImage: {
+            'hero-grid': 'radial-gradient(circle at 10% 10%, rgba(0,194,245,0.08) 0, transparent 30%), radial-gradient(circle at 90% 20%, rgba(168,85,247,0.12) 0, transparent 35%), radial-gradient(circle at 15% 75%, rgba(99,102,241,0.12) 0, transparent 35%)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .border-glow {
+      box-shadow: 0 0 0 1px rgba(0, 194, 245, 0.4) inset, 0 0 24px rgba(0, 194, 245, 0.15);
+    }
+
+    /* First-visit intro animation */
+    @keyframes introPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 194, 245, 0.35);
+      }
+
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 18px rgba(0, 194, 245, 0);
+      }
+
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 194, 245, 0.35);
+      }
+    }
+
+    .intro-pulse {
+      animation: introPulse 1.3s ease-in-out infinite;
+    }
+
+    /* Polished intro visuals */
+    #intro {
+      /* Full-screen background image for loading overlay */
+      background: #0b1220 url('public/SA_v5.png') center center / cover no-repeat;
+    }
+
+    .intro-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 9999px;
+      background:
+        conic-gradient(from 0deg, rgba(0, 194, 245, .6), rgba(99, 102, 241, .45), rgba(168, 85, 247, .55), rgba(0, 194, 245, .6));
+      filter: saturate(120%);
+      animation: rotateSlow 10s linear infinite;
+      opacity: .85;
+    }
+
+    @keyframes rotateSlow {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .intro-title {
+      background: linear-gradient(90deg, #c6f6ff, #ffffff, #a0e9ff);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: introSheen 4s ease-in-out infinite;
+      letter-spacing: 0.2px;
+      text-shadow: 0 2px 16px rgba(0, 194, 245, 0.08);
+    }
+
+    @keyframes introSheen {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .intro-sub {
+      opacity: 0;
+      animation: fadeUp .6s ease forwards;
+      animation-delay: .25s;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Canvas backdrop for subtle particles */
+    #introCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: .35;
+    }
+
+    /* Intro logo look */
+    .intro-logo {
+      filter: drop-shadow(0 6px 30px rgba(0, 194, 245, 0.18)) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+      opacity: .98;
+    }
+
+    #introLogo {
+      max-width: min(90vw, 560px);
+      height: auto;
+    }
+
+    /* Brand name styling */
+    .intro-brand {
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+      font-weight: 800;
+      letter-spacing: .3px;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, .25);
+    }
+
+    /* Gradient-filled logo using the PNG as a mask */
+    .logo-gradient {
+      display: inline-block;
+      height: 2.25rem;
+      /* ~10% større */
+      width: 10.5rem;
+      /* ~10% større */
+      background: linear-gradient(90deg, #ffffff, #39d0ff, #60a5fa);
+      background-size: 200% 100%;
+      background-position: 0% 50%;
+      -webkit-mask: url('public/SA_navn_uden_øje.png') center / contain no-repeat;
+      mask: url('public/SA_navn_uden_øje.png') center / contain no-repeat;
+      filter: drop-shadow(0 6px 30px rgba(0, 194, 245, 0.18)) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+      animation: logoSheen 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoSheen {
+      from {
+        background-position: 0% 50%;
+      }
+
+      to {
+        background-position: 100% 50%;
+      }
+    }
+
+    /* Intro overlay: logo under headline with same gradient as header logo */
+    .intro-name-logo {
+      display: inline-block;
+      height: 2rem;
+      width: 12rem;
+      background: linear-gradient(90deg, #ffffff, #39d0ff);
+      background-size: 200% 100%;
+      background-position: 0% 50%;
+      -webkit-mask: url('public/SA_navn_uden_øje.png') center / contain no-repeat;
+      mask: url('public/SA_navn_uden_øje.png') center / contain no-repeat;
+      filter: drop-shadow(0 4px 18px rgba(0, 194, 245, 0.18)) drop-shadow(0 1px 6px rgba(0, 0, 0, 0.35));
+      animation: logoSheen 6s ease-in-out infinite alternate;
+    }
+
+    /* Gradient headline with rolling glow synchronized to load */
+    .intro-gradient-text {
+      background:
+        linear-gradient(90deg, #39d0ff, #a855f7, #22d3ee, #60a5fa),
+        linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 44%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0) 56%, rgba(255, 255, 255, 0) 100%);
+      background-size: 300% 100%, 300% 100%;
+      background-position: 0% 50%, -20% 50%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: introGradientDual 3.6s ease-in-out forwards;
+      will-change: background-position;
+      letter-spacing: 0.2px;
+      text-shadow: 0 0 24px rgba(56, 189, 248, 0.25), 0 2px 18px rgba(0, 194, 245, 0.08);
+    }
+
+    @keyframes introGradientDual {
+      from {
+        background-position: 0% 50%, -20% 50%;
+      }
+
+      to {
+        background-position: 100% 50%, 120% 50%;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-slate-200 bg-slate-950 [color-scheme:dark]">
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10 bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"></div>
+  <div class="fixed inset-0 -z-10 bg-hero-grid"></div>
+
+  <!-- First-visit Intro Overlay -->
+  <div id="intro" class="fixed inset-0 z-[9999] hidden flex items-center justify-center">
+    <canvas id="introCanvas" aria-hidden="true"></canvas>
+    <div class="text-center px-8 transform-gpu -translate-y-10 sm:-translate-y-16 scale-150 sm:scale-150">
+      <div class="relative mx-auto h-20 w-20">
+        <div class="intro-ring"></div>
+        <div class="relative h-20 w-20 rounded-full bg-brand-400/90 shadow-lg intro-pulse"></div>
+      </div>
+      <h1 id="introHeadline" class="mt-6 text-5xl sm:text-6xl font-extrabold tracking-tight intro-gradient-text">
+        Automatiser dit workflow</h1>
+      <span class="intro-name-logo block mx-auto mt-2" aria-hidden="true"></span>
+    </div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/30 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent">
+    </div>
+  </div>
+
+  <!-- Header / Nav -->
+  <header class="sticky top-0 z-50 border-b border-white/5 bg-slate-950/70 glass">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3">
+          <span class="h-2 w-2 rounded-full bg-brand-400 shadow-glow"></span>
+          <span class="logo-gradient" aria-hidden="true"></span>
+          <span class="sr-only">S.A. Opt I/S</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-8 text-sm">
+          <a href="services.html" class="hover:text-white/90">Services</a>
+          <a href="cases.html" class="hover:text-white/90">Cases</a>
+          <a href="about.html" class="hover:text-white/90">Om os</a>
+          <a href="contact.html" class="hover:text-white/90">Kontakt</a>
+          <a href="contact.html"
+            class="ml-2 inline-flex items-center rounded-md border border-brand-400/60 px-3 py-1.5 text-brand-200 hover:text-white hover:border-brand-300 hover:shadow-glow transition">
+            Book samtale
+          </a>
+        </nav>
+        <button id="navToggle"
+          class="md:hidden inline-flex items-center justify-center rounded-md p-2 text-slate-300 hover:text-white"
+          aria-label="Toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+            <path d="M3.75 5.75h16.5v1.5H3.75v-1.5Zm0 5h16.5v1.5H3.75v-1.5Zm0 5h16.5v1.5H3.75v-1.5Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobileNav" class="md:hidden hidden border-t border-white/5">
+      <div class="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-4 text-sm">
+        <a href="services.html">Services</a>
+        <a href="cases.html">Cases</a>
+        <a href="about.html">Om os</a>
+        <a href="contact.html">Kontakt</a>
+        <a href="contact.html"
+          class="inline-flex items-center rounded-md border border-brand-400/60 px-3 py-1.5 text-brand-200 w-fit">Book
+          samtale</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative">
+    <!-- Subtle hero background image -->
+    <div aria-hidden="true" class="absolute inset-0 -z-10 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-30 brightness-100">
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/50 to-slate-950/30"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
+    </div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <!-- Left copy -->
+        <div class="relative">
+          <p class="text-brand-300 tracking-widest text-xs font-semibold uppercase">AI & Automatisering for SMV'er</p>
+          <h1 class="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            Få fart på jeres forretning med<br />
+            <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-brand-400 to-indigo-300">intelligent
+              automatisering</span>
+          </h1>
+          <p class="mt-5 text-slate-300 max-w-xl">
+            Vi hjælper små virksomheder med at implementere AI, effektivisere processer og skabe målbare resultater i
+            jeres daglige workflow.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="contact.html"
+              class="inline-flex items-center gap-2 rounded-md bg-brand-500 px-4 py-2.5 text-slate-900 font-medium hover:bg-brand-400 transition">
+              Start et projekt
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                <path d="M13.5 4.5 21 12l-7.5 7.5-1.06-1.06L17.88 12l-5.44-5.44L13.5 4.5Z" />
+              </svg>
+            </a>
+            <a href="services.html"
+              class="inline-flex items-center gap-2 rounded-md border border-brand-300/60 px-4 py-2.5 text-brand-200 hover:text-white hover:border-brand-200 transition">
+              Se vores services
+            </a>
+          </div>
+          <div class="mt-8 flex items-center gap-6 text-xs text-slate-400">
+            <div class="flex items-center gap-2"><span class="h-1.5 w-1.5 bg-brand-400 rounded-full"></span> Hurtig
+              onboarding</div>
+            <div class="flex items-center gap-2"><span class="h-1.5 w-1.5 bg-brand-400 rounded-full"></span> Målbare
+              KPI'er</div>
+            <div class="flex items-center gap-2"><span class="h-1.5 w-1.5 bg-brand-400 rounded-full"></span> Sikkerhed i
+              fokus</div>
+          </div>
+        </div>
+
+        <!-- Right visual -->
+        <div class="relative">
+          <div
+            class="absolute -inset-2 rounded-2xl bg-gradient-to-tr from-brand-500/20 via-violet-500/10 to-purple-500/10 blur-xl">
+          </div>
+          <div class="relative overflow-hidden rounded-2xl border border-white/10 glass">
+            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1600&auto=format&fit=crop"
+              alt="Team arbejder med AI og automatisering" class="h-[360px] w-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/80 to-transparent p-4">
+              <p class="text-sm text-slate-300"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="relative py-16 lg:py-24 border-t border-slate-950/70">
+    <!-- smoother gradient transition: darker at top, lighter downwards -->
+    <div aria-hidden="true"
+      class="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/85 via-slate-950/60 to-transparent"></div>
+
+    <!-- feather overlap from hero into section -->
+    <div aria-hidden="true"
+      class="pointer-events-none absolute -top-10 left-0 right-0 h-10 bg-gradient-to-b from-slate-950/80 to-transparent">
+    </div>
+    <!-- match bottom color to contact section -->
+    <div aria-hidden="true"
+      class="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-slate-950/85">
+    </div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <p class="text-brand-300 tracking-widest text-xs font-semibold uppercase">Vores services</p>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-white">Hvad kan vi gøre for jer?</h2>
+        <p class="mt-3 text-slate-300">Fra strategi til implementering – vi hjælper hele vejen og sørger for drift og
+          løbende forbedringer.</p>
+      </div>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- Card 1 -->
+        <div class="rounded-xl border border-white/10 bg-slate-900/40 p-6 hover:border-brand-400/40 transition">
+          <div class="h-10 w-10 rounded-lg bg-brand-500/15 text-brand-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path
+                d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-white">AI-strategi</h3>
+          <p class="mt-2 text-sm text-slate-300">Kortlæg muligheder, prioriter use-cases og læg en plan med klare
+            KPI'er.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="rounded-xl border border-white/10 bg-slate-900/40 p-6 hover:border-brand-400/40 transition">
+          <div class="h-10 w-10 rounded-lg bg-brand-500/15 text-brand-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path d="M4 6.75h16v1.5H4v-1.5Zm0 4.5h16v1.5H4v-1.5Zm0 4.5h10v1.5H4v-1.5Z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-white">Workflow-automatisering</h3>
+          <p class="mt-2 text-sm text-slate-300">Automatiser manuelle opgaver med robuste no-code/low-code pipelines.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="rounded-xl border border-white/10 bg-slate-900/40 p-6 hover:border-brand-400/40 transition">
+          <div class="h-10 w-10 rounded-lg bg-brand-500/15 text-brand-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path d="M12 3a9 9 0 1 0 9 9h-1.5A7.5 7.5 0 1 1 12 4.5V3Zm.75 1.5v6h5.25v-1.5H14.25V4.5Z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-white">AI-agents</h3>
+          <p class="mt-2 text-sm text-slate-300">Kundeservice og intern support med sikre, skræddersyede AI-agenter.</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="rounded-xl border border-white/10 bg-slate-900/40 p-6 hover:border-brand-400/40 transition">
+          <div class="h-10 w-10 rounded-lg bg-brand-500/15 text-brand-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path d="M4.5 5.25h15v1.5h-15v-1.5Zm0 6h15v1.5h-15v-1.5Zm0 6h15v1.5h-15v-1.5Z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-white">Data & dashboards</h3>
+          <p class="mt-2 text-sm text-slate-300">Saml data, skab overblik og beslut hurtigere med visuelle KPI'er.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Svævende logo under de fire bokse -->
+    <div class="mt-12 flex justify-center hidden">
+      <div class="service-float" aria-hidden="true">
+        <img src="public/logo_placeholder.png" alt="Logo" class="service-logo" />
+        <div class="service-shadow"></div>
+
+      </div>
+    </div>
+
+    <!-- Full-width background image with overlay -->
+    <div
+      class="mt-16 sm:mt-20 lg:mt-24 relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-72 sm:h-96 md:h-[28rem] lg:h-[32rem] overflow-visible">
+      <img src="public/baggrund_billede_v3.png" alt="" class="absolute inset-0 w-full h-full object-cover" />
+      <div aria-hidden="true"
+        class="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85"></div>
+      <div class="relative h-full flex items-center justify-center">
+        <div class="service-float" aria-hidden="true">
+          <!--<img src="logo_placeholder.png" alt="Logo" class="service-logo" /> -->
+          <div class="service-shadow"></div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      /* Match float/svæve fra eksemplet */
+      .service-float {
+        position: relative;
+        width: clamp(220px, 40vw, 420px);
+        height: auto;
+        animation: service-float-y 4s ease-in-out infinite;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+      }
+
+      .service-logo {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        /* let logo glow similar to the chip */
+        filter: drop-shadow(0 0 20px rgba(23, 179, 179, 0.55)) drop-shadow(0 0 40px rgba(109, 214, 201, 0.35));
+        transform: rotate(60deg);
+      }
+
+      .service-shadow {
+        position: absolute;
+        left: 50%;
+        bottom: -70px;
+        /* align with sample’s deeper shadow */
+        transform: translateX(-50%) rotateX(50deg) scale(1);
+        width: 60%;
+        height: 22%;
+        border-radius: 1.25rem;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+        filter: blur(25px);
+        opacity: 0.6;
+        animation: service-shadow-float 4s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      @keyframes service-float-y {
+        0% {
+          transform: translateY(0);
+        }
+
+        50% {
+          transform: translateY(-40px);
+        }
+
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes service-shadow-float {
+        0% {
+          transform: translateX(-50%) rotateX(50deg) scale(1);
+          opacity: .6;
+        }
+
+        50% {
+          transform: translateX(-50%) rotateX(50deg) scale(0.8);
+          opacity: .3;
+        }
+
+        100% {
+          transform: translateX(-50%) rotateX(50deg) scale(1);
+          opacity: .6;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+
+        .service-float,
+        .service-shadow {
+          animation: none;
+        }
+      }
+    </style>
+  </section>
+
+  <!-- CTA / Contact -->
+  <section id="contact" class="relative py-16 lg:py-24">
+    <!-- mørkere baggrund kun for denne sektion -->
+    <!-- background image (under gradient) -->
+    <div aria-hidden="true"
+      class="absolute inset-0 -z-20 bg-[url('public/contact_bg.jpg')] bg-cover bg-center opacity-25"></div>
+    <div aria-hidden="true"
+      class="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85"></div>
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="relative overflow-hidden rounded-2xl border border-white/10 glass">
+        <div class="absolute inset-0 bg-gradient-to-r from-brand-500/10 via-transparent to-violet-500/10"></div>
+        <div class="relative p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white">Klar til at komme i gang?</h3>
+            <p class="mt-2 text-slate-300 max-w-2xl">
+              Book en uforpligtende samtale – vi vurderer potentialet og foreslår de første konkrete skridt for jeres
+              virksomhed.
+            </p>
+          </div>
+          <a href="mailto:kontakt@saopt.dk"
+            class="inline-flex items-center gap-2 rounded-md bg-brand-500 px-5 py-3 text-slate-900 font-semibold hover:bg-brand-400 transition shadow-glow">
+            Skriv til os
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+              <path d="M13.5 4.5 21 12l-7.5 7.5-1.06-1.06L17.88 12l-5.44-5.44L13.5 4.5Z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative -mt-px py-10"> <!-- overlap 1px for at undgå hårfin linje -->
+    <!-- præcis samme farve som contact's nederste tone -->
+    <div aria-hidden="true" class="absolute inset-0 -z-10 bg-slate-950/85"></div>
+    <!-- (alternativt: bg-gradient-to-b from-slate-950/85 via-slate-950/85 to-slate-950/85) -->
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <p class="font-semibold text-white">S.A. Opt I/S · CVR 45 82 71 27</p>
+          <p class="text-sm text-slate-400">Kontaktsaopt@gmail.com</p>
+          
+        </div>
+        <div class="text-sm text-slate-400">© <span id="y"></span> S.A. Opt I/S. Alle rettigheder forbeholdes.
+        <p class="text-sm text-slate-400">AI & automatisering til små virksomheder</p>
+        </div>
+          
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const btn = document.getElementById('navToggle');
+    const nav = document.getElementById('mobileNav');
+    btn?.addEventListener('click', () => nav?.classList.toggle('hidden'));
+    // Year
+    const y = document.getElementById('y');
+    if (y) y.textContent = new Date().getFullYear();
+    // Intro overlay on every page load
+    (function () {
+      const intro = document.getElementById('intro');
+      if (!intro) return;
+      // Show overlay immediately every time
+      intro.classList.remove('hidden');
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const headline = document.getElementById('introHeadline');
+      const FallbackMs = 8000; // safety net if animation doesn't fire
+      let done = false;
+      let stopParticles = () => { };
+      if (!prefersReduced) stopParticles = initIntroParticles();
+
+      function finish() {
+        if (done) return; done = true;
+        intro.style.transition = 'opacity 700ms ease';
+        intro.style.opacity = '0';
+        setTimeout(() => { stopParticles(); intro.remove(); }, 740);
+      }
+
+      if (!prefersReduced && headline) {
+        headline.addEventListener('animationend', finish, { once: true });
+        // safety fallback
+        setTimeout(finish, FallbackMs);
+      } else {
+        // reduced motion: quick show then finish
+        setTimeout(finish, 800);
+      }
+    })();
+
+    // Subtle particle backdrop for first-visit intro (no fireworks)
+    function initIntroParticles() {
+      const canvas = document.getElementById('introCanvas');
+      if (!canvas) return () => { };
+      const ctx = canvas.getContext('2d');
+      let rafId;
+      let running = true;
+      const DPR = Math.min(window.devicePixelRatio || 1, 2);
+      const particles = [];
+      const baseCount = 60; // light weight
+      let mouse = { x: 0.5, y: 0.5 };
+
+      function resize() {
+        const { clientWidth: w, clientHeight: h } = canvas;
+        canvas.width = Math.floor(w * DPR);
+        canvas.height = Math.floor(h * DPR);
+        ctx.scale(DPR, DPR);
+      }
+      // Seed particles
+      function seed() {
+        particles.length = 0;
+        for (let i = 0; i < baseCount; i++) {
+          particles.push({
+            x: Math.random(),
+            y: Math.random(),
+            r: 1.2 + Math.random() * 2.2,
+            vx: (Math.random() - 0.5) * 0.15,
+            vy: (Math.random() - 0.5) * 0.15,
+            hue: 190 + Math.random() * 70, // blue-cyan-violet range
+          });
+        }
+      }
+
+      function draw() {
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+        // very soft vignette
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, 'rgba(10, 18, 32, 0.3)');
+        grad.addColorStop(1, 'rgba(10, 18, 32, 0.0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        const parallaxX = (mouse.x - 0.5) * 8;
+        const parallaxY = (mouse.y - 0.5) * 8;
+
+        for (const p of particles) {
+          p.x += p.vx * 0.6;
+          p.y += p.vy * 0.6;
+          if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
+          if (p.y < 0) p.y = 1; if (p.y > 1) p.y = 0;
+
+          const px = p.x * w + parallaxX;
+          const py = p.y * h + parallaxY;
+          const g = ctx.createRadialGradient(px, py, 0, px, py, p.r * 6);
+          g.addColorStop(0, `hsla(${p.hue}, 85%, 65%, .55)`);
+          g.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(px, py, p.r * 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        if (running) rafId = requestAnimationFrame(draw);
+      }
+
+      function onMouse(e) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = (e.clientX - rect.left) / rect.width;
+        mouse.y = (e.clientY - rect.top) / rect.height;
+      }
+
+      // Setup
+      resize(); seed(); draw();
+      window.addEventListener('resize', resize);
+      window.addEventListener('mousemove', onMouse);
+
+      return function stop() {
+        running = false; if (rafId) cancelAnimationFrame(rafId);
+        window.removeEventListener('resize', resize);
+        window.removeEventListener('mousemove', onMouse);
+      };
+    }
+  </script>
+
+
+  </section>
+</body>
+
+</html>
