@@ -6,7 +6,6 @@ S.A. Opt I/S — Website
 
 A lightweight static website for **S.A. Opt I/S** (AI & automation for SMEs). Built with plain HTML, Tailwind via CDN, and a bit of vanilla JS for the intro/particles and mobile menu. No bundlers or frameworks required.
 
-> 🇩🇰 Looking for Danish? See `README.da.md`.
 
 ## Quick start
 - Open `index.html` directly in your browser **or** run a tiny local server:
